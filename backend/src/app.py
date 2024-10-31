@@ -37,7 +37,7 @@ app.include_router(
 async def on_startup() -> None:
     await init_logger()
     await init_db()
-    
+
     programm_state.programm_status = 'Started'
 
     logger.info('App started')
