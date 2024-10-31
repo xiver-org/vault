@@ -47,6 +47,8 @@ async def on_startup() -> None:
 async def on_shutdown() -> None:
     await async_session_maker.begin().async_session.close_all()
 
+    programm_state.programm_status = "Error"
+
     logger.info('App shut down')
 
 
