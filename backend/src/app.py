@@ -11,11 +11,12 @@ from .database import async_session_maker
 from .functions import send_error_msg
 from .init_db import init_db
 from .logger import init_logger
+from .routes import health_check_router, programm_state
 
 bot_turn = []
 
 app = FastAPI(
-    title='Family Control',
+    title='Xiver Vault',
     debug=config.debug,
     openapi_url='/openapi.json',
     docs_url='/docs',
@@ -25,11 +26,19 @@ app = FastAPI(
 makedirs(config.static_files_path, exist_ok=True)
 app.mount("/static", StaticFiles(directory=config.static_files_path))
 
+app.include_router(
+    health_check_router,
+    prefix='/health',
+    tags=['health'],
+)
+
 
 @app.on_event('startup')
 async def on_startup() -> None:
     await init_logger()
     await init_db()
+    
+    programm_state.programm_status = 'Started'
 
     logger.info('App started')
 
